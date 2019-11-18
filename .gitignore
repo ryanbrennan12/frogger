@@ -1,0 +1,5 @@
+# Dependency directories
+node_modules
+
+# Webpack bundle output
+build/static/js
