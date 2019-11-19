@@ -4,16 +4,16 @@ import uuidv4 from 'uuid/v4';
 const Enemy = ({ enemy }) => {
   return (
     <div
-    style = {{
-      display: 'inline-block',
-      border: '1px solid black',
-      position: 'absolute',
-      backgroundColor: 'red',
-      width: `${enemy.width}px`,
-      height: `${enemy.height}px`,
-      left: `${enemy.pos.x}px`,
-      top: `${enemy.pos.y}px`,
-    }}
+      style={{
+        display: 'inline-block',
+        border: '1px solid black',
+        position: 'absolute',
+        backgroundColor: 'red',
+        width: `${enemy.width}px`,
+        height: `${enemy.height}px`,
+        left: `${enemy.pos.x}px`,
+        top: `${enemy.pos.y}px`,
+      }}
     />
   );
 };
@@ -21,21 +21,23 @@ const Enemy = ({ enemy }) => {
 const PlayerCharacter = ({ player }) => {
   return (
     <div
-    style = {{
-      display: 'inline-block',
-      border: '1px solid black',
-      position: 'absolute',
-      backgroundColor: 'green',
-      width: `${player.width}px`,
-      height: `${player.height}px`,
-      left: `${player.pos.x}px`,
-      top: `${player.pos.y}px`,
-    }}
+      style={{
+        display: 'inline-block',
+        border: '1px solid black',
+        position: 'absolute',
+        backgroundColor: 'green',
+        width: `${player.width}px`,
+        height: `${player.height}px`,
+        left: `${player.pos.x}px`,
+        top: `${player.pos.y}px`,
+      }}
     />
   );
 };
 
-export default class gameContainer extends React.Component {
+export default class game
+
+  extends React.Component {
   constructor() {
     super();
     this.createEnemy = this.createEnemy.bind(this);
@@ -67,6 +69,7 @@ export default class gameContainer extends React.Component {
       gameTickInterval: window.setInterval(this.gameTick, 50),
     };
     window.addEventListener('keydown', this.movePlayerDiv, false);
+    this.isWinner = this.isWinner.bind(this);
   }
   componentWillUnmount() {
     window.clearInterval(this.state.gameTickInterval);
@@ -100,16 +103,17 @@ export default class gameContainer extends React.Component {
   }
   updateEnemyPositions(enemiesArray) {
     const updatedEnemies = enemiesArray
-    .map(enemy => {
-      enemy.pos.x += enemy.speed;
+      .map(enemy => {
+        console.log(enemy)
+        enemy.pos.x += enemy.speed;
 
-      const rightBound = enemy.pos.x + enemy.width;
-      if (rightBound >= 800) {
-        return null;
-      }
+        const rightBound = enemy.pos.x + enemy.width;
+        if (rightBound >= 500) {
+          return null;
+        }
 
-      return enemy;
-    });
+        return enemy;
+      });
     return updatedEnemies;
   }
   randomlyAddNewEnemy(enemies) {
@@ -128,7 +132,7 @@ export default class gameContainer extends React.Component {
       minTimeExceeded &&
       diceRoll > (maxRoll / 3)
     ) {
-      return enemies.concat([ this.createEnemy(this.state.numOfRows)]);
+      return enemies.concat([this.createEnemy(this.state.numOfRows)]);
     }
     return enemies;
   }
@@ -136,6 +140,7 @@ export default class gameContainer extends React.Component {
     const enemiesArray = this.randomlyAddNewEnemy(this.state.enemies);
     const enemyAdded = enemiesArray.length > this.state.enemies.length;
     let updatedEnemies = this.updateEnemyPositions(enemiesArray);
+    // console.log(enemiesArray)
     updatedEnemies = updatedEnemies.filter(enemy => enemy !== null);
     let lastEnemyAdded = this.state.lastEnemyAdded;
     if (enemyAdded) {
@@ -175,9 +180,10 @@ export default class gameContainer extends React.Component {
       }
       return acc;
     }
-    , false);
+      , false);
 
     if (collision) {
+
       console.log('We had a collision here!');
     }
   }
@@ -189,22 +195,42 @@ export default class gameContainer extends React.Component {
       (a.pos.x > (b.pos.x + b.width))
     );
   }
+
+  isWinner() {
+    if (this.state.player.pos.y === 0) {
+      return (
+        <div
+          style={{
+            display: 'inline-block',
+            border: '1px solid black',
+            position: 'absolute',
+            left: '50%',
+            backgroundColor: 'red'
+
+          }}>You have won Yayyy!</div>
+      )
+    }
+  }
+
+
+
   render() {
     return (
       <div>
-        <h1>{ this.state.gameTitle }</h1>
+        <h1>{this.state.gameTitle}</h1>
         <h4>Move with the arrow keys</h4>
         <div
-        style = { this.state.gameContainerStyle }
+          style={this.state.gameContainerStyle}
         >
+          {this.isWinner()}
           <PlayerCharacter
-          player = { this.state.player }
+            player={this.state.player}
           />
           {
             this.state.enemies.map(enemy => (
               <Enemy
-              key = { enemy.key }
-              enemy = { enemy }
+                key={enemy.key}
+                enemy={enemy}
               />
             ))
           }
