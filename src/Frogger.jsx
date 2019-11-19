@@ -217,7 +217,7 @@ export default class game
           style={this.state.gameContainerStyle}
         >
 
-          <WinModal onClose={this.showModalFunc} show={this.state.show} />
+          <WinModal onClose={this.showModalFunc} show={this.state.showWin} />
           <PlayerCharacter
             player={this.state.player}
           />

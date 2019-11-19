@@ -14,7 +14,8 @@ class WinModal extends React.Component {
     this.props.onClose()
   }
   render() {
-    if (this.props.showWin === false) {
+
+    if (this.props.show === false) {
       return null;
     }
 
@@ -23,7 +24,7 @@ class WinModal extends React.Component {
         Winner Winner Chicken Dinner
       <div>
           <button
-          onClick={this.onNewGame}
+            onClick={this.onNewGame}
           >
             New Game
           </button>
