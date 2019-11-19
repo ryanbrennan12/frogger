@@ -47,6 +47,7 @@ export default class game
     this.movePlayerDiv = this.movePlayerDiv.bind(this);
     const numOfRows = 5;
     this.state = {
+
       gameTitle: 'Frogger',
       rowHeight: 100,
       timeBetweenEnemies: 3000,
@@ -68,9 +69,11 @@ export default class game
         border: '1px solid black',
       },
       gameTickInterval: window.setInterval(this.gameTick, 50),
+      showWin: false
     };
     window.addEventListener('keydown', this.movePlayerDiv, false);
-    this.isWinner = this.isWinner.bind(this);
+    // this.isWinner = this.isWinner.bind(this);
+    this.showModalFunc = this.showModalFunc.bind(this);
   }
   componentWillUnmount() {
     window.clearInterval(this.state.gameTickInterval);
@@ -105,7 +108,6 @@ export default class game
   updateEnemyPositions(enemiesArray) {
     const updatedEnemies = enemiesArray
       .map(enemy => {
-        console.log(enemy)
         enemy.pos.x += enemy.speed;
 
         const rightBound = enemy.pos.x + enemy.width;
@@ -171,6 +173,7 @@ export default class game
       e.preventDefault();
       player.pos.x = player.pos.x + 100;
     }
+
     this.setState({ player });
   }
   checkCollisions(enemiesArray) {
@@ -184,10 +187,10 @@ export default class game
       , false);
 
     if (collision) {
-
       console.log('We had a collision here!');
     }
   }
+
   didCollide(a, b) {
     return !(
       ((a.pos.y + a.height) < (b.pos.y)) ||
@@ -197,22 +200,12 @@ export default class game
     );
   }
 
-  isWinner() {
-    if (this.state.player.pos.y === 0) {
-      return (
-        <div
-          style={{
-            display: 'inline-block',
-            border: '1px solid black',
-            position: 'absolute',
-            left: '50%',
-            backgroundColor: 'red'
-
-          }}>You have won Yayyy!</div>
-      )
-    }
+  showModalFunc(e) {
+      console.log('clicked')
+      this.setState({
+        showWin: true
+      })
   }
-
 
 
   render() {
@@ -223,7 +216,8 @@ export default class game
         <div
           style={this.state.gameContainerStyle}
         >
-          {this.isWinner()}
+
+          <WinModal onClose={this.showModalFunc} show={this.state.show} />
           <PlayerCharacter
             player={this.state.player}
           />
