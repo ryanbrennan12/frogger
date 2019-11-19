@@ -6,15 +6,14 @@ class WinModal extends React.Component {
   constructor() {
     super()
 
-
-
-    this.onNewGame = this.onNewGame.bind(this)
+    this.onNewGame = this.onNewGame.bind(this);
   }
-  onNewGame(e) {
-    this.props.onClose()
+
+  onNewGame() {
+    this.props.onModalToggle('newGame')
   }
+
   render() {
-
     if (this.props.show === false) {
       return null;
     }

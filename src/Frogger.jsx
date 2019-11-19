@@ -69,7 +69,7 @@ export default class game
         border: '1px solid black',
       },
       gameTickInterval: window.setInterval(this.gameTick, 50),
-      showWin: false
+      show: false
     };
     window.addEventListener('keydown', this.movePlayerDiv, false);
     // this.isWinner = this.isWinner.bind(this);
@@ -175,6 +175,11 @@ export default class game
     }
 
     this.setState({ player });
+    if (this.state.player.pos.y === 0) {
+      this.setState({
+        show: true
+      })
+    }
   }
   checkCollisions(enemiesArray) {
     const player = this.state.player;
@@ -200,11 +205,18 @@ export default class game
     );
   }
 
-  showModalFunc(e) {
-      console.log('clicked')
-      this.setState({
-        showWin: true
-      })
+  showModalFunc(condition) {
+    if (condition === 'newGame') {
+      this.setState(({
+        show: false,
+        player:{
+          pos:{
+            x: 200,
+            y: 400
+          }
+        }
+      }))
+    }
   }
 
 
@@ -216,11 +228,11 @@ export default class game
         <div
           style={this.state.gameContainerStyle}
         >
-
-          <WinModal onClose={this.showModalFunc} show={this.state.showWin} />
+          <WinModal onModalToggle={this.showModalFunc} show={this.state.show}/>
           <PlayerCharacter
             player={this.state.player}
           />
+
           {
             this.state.enemies.map(enemy => (
               <Enemy
