@@ -1,5 +1,6 @@
 import React from 'react';
 import uuidv4 from 'uuid/v4';
+import WinModal from './Win';
 
 const Enemy = ({ enemy }) => {
   return (
@@ -46,6 +47,7 @@ export default class game
     this.movePlayerDiv = this.movePlayerDiv.bind(this);
     const numOfRows = 5;
     this.state = {
+
       gameTitle: 'Frogger',
       rowHeight: 100,
       timeBetweenEnemies: 3000,
@@ -66,10 +68,14 @@ export default class game
         height: '500px',
         border: '1px solid black',
       },
+      levelSpeed: 50,
       gameTickInterval: window.setInterval(this.gameTick, 50),
+      show: false,
+      level: 1
     };
     window.addEventListener('keydown', this.movePlayerDiv, false);
-    this.isWinner = this.isWinner.bind(this);
+    // this.isWinner = this.isWinner.bind(this);
+    this.showModalFunc = this.showModalFunc.bind(this);
   }
   componentWillUnmount() {
     window.clearInterval(this.state.gameTickInterval);
@@ -84,7 +90,7 @@ export default class game
     const laneNum = Math.floor(Math.random() * (maxLane - minLane)) + minLane;
     return this.calculateTopPxValueByLane(laneNum, 100);
   }
-  createEnemy(maxRow) {
+  createEnemy(maxRow, level = 0) {
     const minSpeed = 2;
     const maxSpeed = 5;
     return {
@@ -104,7 +110,6 @@ export default class game
   updateEnemyPositions(enemiesArray) {
     const updatedEnemies = enemiesArray
       .map(enemy => {
-        console.log(enemy)
         enemy.pos.x += enemy.speed;
 
         const rightBound = enemy.pos.x + enemy.width;
@@ -170,7 +175,14 @@ export default class game
       e.preventDefault();
       player.pos.x = player.pos.x + 100;
     }
+
     this.setState({ player });
+    if (this.state.player.pos.y === 0) {
+      window.clearInterval(this.state.gameTickInterval);
+      this.setState({
+        show: true
+      })
+    }
   }
   checkCollisions(enemiesArray) {
     const player = this.state.player;
@@ -183,10 +195,10 @@ export default class game
       , false);
 
     if (collision) {
-
       console.log('We had a collision here!');
     }
   }
+
   didCollide(a, b) {
     return !(
       ((a.pos.y + a.height) < (b.pos.y)) ||
@@ -196,36 +208,50 @@ export default class game
     );
   }
 
-  isWinner() {
-    if (this.state.player.pos.y === 0) {
-      return (
-        <div
-          style={{
-            display: 'inline-block',
-            border: '1px solid black',
-            position: 'absolute',
-            left: '50%',
-            backgroundColor: 'red'
-
-          }}>You have won Yayyy!</div>
-      )
+  showModalFunc(condition) {
+    if (condition === 'newGame') {
+      this.setState(({
+        show: false,
+        player:{
+          pos:{
+            x: 200,
+            y: 400
+          }
+        },
+        gameTickInterval: window.setInterval(this.gameTick, 50),
+      }))
+    } else if (condition === 'levelUp') {
+      const timeBetween = this.state.timeBetweenEnemies;
+      const newLevel = this.state.level + 1;
+      this.setState(({
+        show: false,
+        player:{
+          pos:{
+            x: 200,
+            y: 400
+          }
+        },
+        timeBetweenEnemies: timeBetween - 500,
+        gameTickInterval: window.setInterval(this.gameTick, 50),
+        level: newLevel
+      }))
     }
   }
-
 
 
   render() {
     return (
       <div>
         <h1>{this.state.gameTitle}</h1>
+        <h4>Level: {this.state.level}</h4>
         <h4>Move with the arrow keys</h4>
         <div
           style={this.state.gameContainerStyle}
         >
-          {this.isWinner()}
           <PlayerCharacter
             player={this.state.player}
           />
+
           {
             this.state.enemies.map(enemy => (
               <Enemy
@@ -234,6 +260,7 @@ export default class game
               />
             ))
           }
+          <WinModal onModalToggle={this.showModalFunc} show={this.state.show}/>
         </div>
       </div>
     );
