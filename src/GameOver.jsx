@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 
 
-class WinModal extends React.Component {
+class GameOverModal extends React.Component {
   constructor() {
     super();
     this.onNewGame = this.onNewGame.bind(this);
@@ -13,7 +13,7 @@ class WinModal extends React.Component {
   }
 
   render() {
-    if (!this.props.show) {
+    if (this.props.show === false) {
       return null;
     }
 
@@ -21,7 +21,7 @@ class WinModal extends React.Component {
       <div
         style={{
           position: 'absolute',
-          background: '#38A1F3',
+          background: 'orange',
           border: '1px solid #ccc',
           margin: '0 auto',
           left: '150px',
@@ -29,8 +29,7 @@ class WinModal extends React.Component {
           borderRadius: '10px'
         }}
       >
-        Winner Winner
-        Chicken Dinner 🐥
+        OH NO!!! SPLAT!!🐸😭
     < div >
           <button
             style={{
@@ -41,22 +40,13 @@ class WinModal extends React.Component {
           >
             New Game
           </button>
-          <button
-            style={{
-              margin: '0 auto',
-              display: 'block'
-            }}
-            onClick={() => this.onNewGame('levelUp')}
-          >
-            Next Level
-          </button>
         </div >
       </div >
     )
   }
 }
 
-export default WinModal;
+export default GameOverModal;
 
 
 
