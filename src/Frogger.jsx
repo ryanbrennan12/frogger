@@ -176,6 +176,7 @@ export default class game
 
     this.setState({ player });
     if (this.state.player.pos.y === 0) {
+      window.clearInterval(this.state.gameTickInterval);
       this.setState({
         show: true
       })
@@ -214,7 +215,8 @@ export default class game
             x: 200,
             y: 400
           }
-        }
+        },
+        gameTickInterval: window.setInterval(this.gameTick, 50),
       }))
     }
   }
@@ -228,7 +230,6 @@ export default class game
         <div
           style={this.state.gameContainerStyle}
         >
-          <WinModal onModalToggle={this.showModalFunc} show={this.state.show}/>
           <PlayerCharacter
             player={this.state.player}
           />
@@ -241,6 +242,7 @@ export default class game
               />
             ))
           }
+          <WinModal onModalToggle={this.showModalFunc} show={this.state.show}/>
         </div>
       </div>
     );

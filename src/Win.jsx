@@ -19,16 +19,28 @@ class WinModal extends React.Component {
     }
 
     return (
-      <div>
+      <div
+        style={{
+          position: 'absolute',
+          background: '#38A1F3',
+          border: '1px solid #ccc',
+          transition: '1.1s ease- out',
+          margin: '0 auto',
+          left: '150px',
+          top: '200px'
+
+        }
+        }
+      >
         Winner Winner Chicken Dinner
-      <div>
+    < div >
           <button
             onClick={this.onNewGame}
           >
             New Game
           </button>
-        </div>
-      </div>
+        </div >
+      </div >
     )
   }
 }
