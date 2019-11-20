@@ -24,7 +24,6 @@ class WinModal extends React.Component {
           position: 'absolute',
           background: '#38A1F3',
           border: '1px solid #ccc',
-          transition: '1.1s ease- out',
           margin: '0 auto',
           left: '150px',
           top: '200px',
@@ -33,7 +32,7 @@ class WinModal extends React.Component {
         }}
       >
         Winner Winner
-        Chicken Dinner
+        Chicken Dinner 🐥
     < div >
           <button
             onClick={() => this.onNewGame('newGame')}

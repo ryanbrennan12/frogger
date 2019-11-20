@@ -210,6 +210,7 @@ export default class game
 
   showModalFunc(condition) {
     if (condition === 'newGame') {
+      //hiding win modal and resetting the position
       this.setState(({
         show: false,
         player:{
@@ -219,6 +220,7 @@ export default class game
           }
         },
         gameTickInterval: window.setInterval(this.gameTick, 50),
+        level: 1
       }))
     } else if (condition === 'levelUp') {
       const timeBetween = this.state.timeBetweenEnemies;
