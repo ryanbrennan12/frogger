@@ -1,6 +1,7 @@
 import React from 'react';
 import uuidv4 from 'uuid/v4';
 import WinModal from './Win';
+import GameOverModal from './GameOver';
 
 const Enemy = ({ enemy }) => {
   return (
@@ -67,10 +68,13 @@ export default class game
         width: '500px',
         height: '500px',
         border: '1px solid black',
+        overflow: 'hidden'
       },
       levelSpeed: 50,
       gameTickInterval: window.setInterval(this.gameTick, 50),
+
       show: false,
+      showLoss: false,
       level: 1
     };
     window.addEventListener('keydown', this.movePlayerDiv, false);
@@ -99,7 +103,7 @@ export default class game
       height: 99,
       speed: Math.floor(Math.random() * (maxSpeed - minSpeed)) + minSpeed,
       pos: {
-        x: 1,
+        x: -100,
         y: this.selectRandomEnemyLane(maxRow),
       },
     };
@@ -113,7 +117,7 @@ export default class game
         enemy.pos.x += enemy.speed;
 
         const rightBound = enemy.pos.x + enemy.width;
-        if (rightBound >= 500) {
+        if (rightBound >= 800) {
           return null;
         }
 
@@ -196,6 +200,12 @@ export default class game
 
     if (collision) {
       console.log('We had a collision here!');
+      //Same logic- stop the enemies and restart the game
+      window.clearInterval(this.state.gameTickInterval);
+      this.setState({
+        showLoss: true
+      })
+
     }
   }
 
@@ -210,9 +220,10 @@ export default class game
 
   showModalFunc(condition) {
     if (condition === 'newGame') {
-      //hiding win modal and resetting the position
       this.setState(({
         show: false,
+        showLoss: false,
+        enemies: [],
         player:{
           pos:{
             x: 200,
@@ -220,20 +231,28 @@ export default class game
           }
         },
         gameTickInterval: window.setInterval(this.gameTick, 50),
+        timeBetweenEnemies: 3000,
         level: 1
       }))
     } else if (condition === 'levelUp') {
-      const timeBetween = this.state.timeBetweenEnemies;
+      let timeBetween;
+      if (this.state.timeBetweenEnemies > 0) {
+        timeBetween = this.state.timeBetweenEnemies - 500;
+      } else {
+        timeBetween = 0;
+      }
+
       const newLevel = this.state.level + 1;
       this.setState(({
         show: false,
+        enemies: [],
         player:{
           pos:{
             x: 200,
             y: 400
           }
         },
-        timeBetweenEnemies: timeBetween - 500,
+        timeBetweenEnemies: timeBetween,
         gameTickInterval: window.setInterval(this.gameTick, 50),
         level: newLevel
       }))
@@ -263,6 +282,7 @@ export default class game
             ))
           }
           <WinModal onModalToggle={this.showModalFunc} show={this.state.show}/>
+          <GameOverModal onModalToggle={this.showModalFunc} show={this.state.showLoss}/>
         </div>
       </div>
     );
