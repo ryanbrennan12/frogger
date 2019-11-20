@@ -68,8 +68,10 @@ export default class game
         height: '500px',
         border: '1px solid black',
       },
+      levelSpeed: 50,
       gameTickInterval: window.setInterval(this.gameTick, 50),
-      show: false
+      show: false,
+      level: 1
     };
     window.addEventListener('keydown', this.movePlayerDiv, false);
     // this.isWinner = this.isWinner.bind(this);
@@ -88,7 +90,7 @@ export default class game
     const laneNum = Math.floor(Math.random() * (maxLane - minLane)) + minLane;
     return this.calculateTopPxValueByLane(laneNum, 100);
   }
-  createEnemy(maxRow) {
+  createEnemy(maxRow, level = 0) {
     const minSpeed = 2;
     const maxSpeed = 5;
     return {
@@ -218,6 +220,21 @@ export default class game
         },
         gameTickInterval: window.setInterval(this.gameTick, 50),
       }))
+    } else if (condition === 'levelUp') {
+      const timeBetween = this.state.timeBetweenEnemies;
+      const newLevel = this.state.level + 1;
+      this.setState(({
+        show: false,
+        player:{
+          pos:{
+            x: 200,
+            y: 400
+          }
+        },
+        timeBetweenEnemies: timeBetween - 500,
+        gameTickInterval: window.setInterval(this.gameTick, 50),
+        level: newLevel
+      }))
     }
   }
 
@@ -226,6 +243,7 @@ export default class game
     return (
       <div>
         <h1>{this.state.gameTitle}</h1>
+        <h4>Level: {this.state.level}</h4>
         <h4>Move with the arrow keys</h4>
         <div
           style={this.state.gameContainerStyle}

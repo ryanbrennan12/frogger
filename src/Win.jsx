@@ -9,8 +9,8 @@ class WinModal extends React.Component {
     this.onNewGame = this.onNewGame.bind(this);
   }
 
-  onNewGame() {
-    this.props.onModalToggle('newGame')
+  onNewGame(typeOfGame) {
+    this.props.onModalToggle(typeOfGame)
   }
 
   render() {
@@ -27,22 +27,31 @@ class WinModal extends React.Component {
           transition: '1.1s ease- out',
           margin: '0 auto',
           left: '150px',
-          top: '200px'
+          top: '200px',
+          borderRadius: '10px'
 
-        }
-        }
+        }}
       >
-        Winner Winner Chicken Dinner
+        Winner Winner
+        Chicken Dinner
     < div >
           <button
-            onClick={this.onNewGame}
+            onClick={() => this.onNewGame('newGame')}
           >
             New Game
           </button>
+          <button
+            onClick={() => this.onNewGame('levelUp')}
+          >
+            Next Level
+          </button>
         </div >
       </div >
+
     )
   }
 }
 
 export default WinModal;
+
+
